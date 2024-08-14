@@ -1,24 +1,10 @@
-<!--
-要翻译的文件：https://github.com/SwiftGGTeam/the-swift-programming-language-in-chinese/blob/swift-6-beta-translation/swift-6-beta.docc/LanguageGuide/Protocols.md
-Swift 文档源文件地址：https://docs.swift.org/swift-book/documentation/the-swift-programming-language/protocols
-翻译估计用时：⭐️⭐️⭐️⭐️⭐️
--->
+# 协议
 
-# Protocols
+定义所遵循的类型必须实现的方法、属性和其他要求。
 
-Define requirements that conforming types must implement.
+*协议（Protocol）*定义了满足特定任务或功能所需的方法、属性和其他要求的蓝图。类、结构体或枚举可以*遵循（adopt）*该协议，并提供协议要求的具体实现。任何满足协议要求的类型都被称为*遵循（conform）*该协议。
 
-A *protocol* defines a blueprint of
-methods, properties, and other requirements
-that suit a particular task or piece of functionality.
-The protocol can then be *adopted* by a class, structure, or enumeration
-to provide an actual implementation of those requirements.
-Any type that satisfies the requirements of a protocol is said to
-*conform* to that protocol.
-
-In addition to specifying requirements that conforming types must implement,
-you can extend a protocol to implement some of these requirements
-or to implement additional functionality that conforming types can take advantage of.
+除了声明所遵循类型必须实现的要求之外，你还可以对协议进行扩展，通过扩展来实现一部分要求或者实现一些附加功能，这样遵循协议的类型就能够使用这些功能。
 
 <!--
   FIXME: Protocols should also be able to support initializers,
@@ -31,13 +17,13 @@ or to implement additional functionality that conforming types can take advantag
   I'm not sure I should mention them in this chapter until they work more generally.
 -->
 
-## Protocol Syntax
+## 协议语法
 
-You define protocols in a very similar way to classes, structures, and enumerations:
+协议的定义方式与类、结构体和枚举的定义非常相似：
 
 ```swift
 protocol SomeProtocol {
-    // protocol definition goes here
+    // 这里是协议的定义部分
 }
 ```
 
@@ -51,14 +37,11 @@ protocol SomeProtocol {
   ```
 -->
 
-Custom types state that they adopt a particular protocol
-by placing the protocol's name after the type's name,
-separated by a colon, as part of their definition.
-Multiple protocols can be listed, and are separated by commas:
+要让自定义类型遵循某个协议，在定义类型时，需要在类型名称后加上协议名称，中间以冒号（`:`）分隔。遵循多个协议时，各协议之间用逗号（`,`）分隔：
 
 ```swift
 struct SomeStructure: FirstProtocol, AnotherProtocol {
-    // structure definition goes here
+    // 这里是结构体的定义部分
 }
 ```
 
@@ -74,12 +57,11 @@ struct SomeStructure: FirstProtocol, AnotherProtocol {
   ```
 -->
 
-If a class has a superclass, list the superclass name
-before any protocols it adopts, followed by a comma:
+如果一个类拥有父类，应该将父类名放在其他遵循的协议名之前，以逗号分隔：
 
 ```swift
 class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
-    // class definition goes here
+    // 这里是类的定义部分
 }
 ```
 
@@ -94,35 +76,15 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
   ```
 -->
 
-> Note: Because protocols are types,
-> begin their names with a capital letter
-> (such as `FullyNamed` and `RandomNumberGenerator`)
-> to match the names of other types in Swift
-> (such as `Int`, `String`, and `Double`).
+> 注意：由于协议是类型，它们的名称应以大写字母开头（如 `FullyNamed` 和 `RandomNumberGenerator`），以与 Swift 中其他类型的命名规范（如 `Int`、`String` 和 `Double`）保持一致。
 
-## Property Requirements
+## 属性要求
 
-A protocol can require any conforming type to provide
-an instance property or type property with a particular name and type.
-The protocol doesn't specify whether the property should be
-a stored property or a computed property ---
-it only specifies the required property name and type.
-The protocol also specifies whether each property must be gettable
-or gettable *and* settable.
+协议可以要求遵循协议的类型提供特定名称和类型的实例属性或类型属性。协议不指定属性是存储属性还是计算属性，它只指定属性的名称和类型。此外，协议还指定属性是*可读*的还是*可读可写的*。
 
-If a protocol requires a property to be gettable and settable,
-that property requirement can't be fulfilled by
-a constant stored property or a read-only computed property.
-If the protocol only requires a property to be gettable,
-the requirement can be satisfied by any kind of property,
-and it's valid for the property to be also settable
-if this is useful for your own code.
+如果协议要求属性是可读可写的，那么该属性不能是常量属性或只读的计算属性。如果协议只要求属性是可读的，那么该属性不仅可以是可读的，如果你自己的代码需要的话，还可以是可写的。
 
-Property requirements are always declared as variable properties,
-prefixed with the `var` keyword.
-Gettable and settable properties are indicated by writing
-`{ get set }` after their type declaration,
-and gettable properties are indicated by writing `{ get }`.
+协议总是用 `var` 关键字来声明变量属性，在类型声明后加上 `{ set get }`来表示属性是可读可写的，可读属性则用 `{ get }` 来表示：
 
 ```swift
 protocol SomeProtocol {
@@ -142,10 +104,7 @@ protocol SomeProtocol {
   ```
 -->
 
-Always prefix type property requirements with the `static` keyword
-when you define them in a protocol.
-This rule pertains even though type property requirements can be prefixed with
-the `class` or `static` keyword when implemented by a class:
+在协议中定义类型属性时，总是使用 `static` 关键字作为前缀。当一个类遵循协议时，除了 `static` 关键字，还可以使用 `class` 关键字来声明类型属性：
 
 ```swift
 protocol AnotherProtocol {
@@ -163,7 +122,7 @@ protocol AnotherProtocol {
   ```
 -->
 
-Here's an example of a protocol with a single instance property requirement:
+如下所示，这是一个只含有一个实例属性要求的协议：
 
 ```swift
 protocol FullyNamed {
@@ -181,21 +140,16 @@ protocol FullyNamed {
   ```
 -->
 
-The `FullyNamed` protocol requires a conforming type to provide a fully qualified name.
-The protocol doesn't specify anything else about the nature of the conforming type ---
-it only specifies that the type must be able to provide a full name for itself.
-The protocol states that any `FullyNamed` type must have
-a gettable instance property called `fullName`, which is of type `String`.
+`FullyNamed` 协议除了要求遵循协议的类型提供 `fullName` 属性外，并没有其他特别的要求。这个协议表示，任何遵循 `FullyNamed` 的类型，都必须有一个可读的 `String` 类型的实例属性 `fullName`。
 
-Here's an example of a simple structure that adopts and conforms to
-the `FullyNamed` protocol:
+下面是一个遵循 `FullyNamed` 协议的简单结构体：
 
 ```swift
 struct Person: FullyNamed {
     var fullName: String
 }
 let john = Person(fullName: "John Appleseed")
-// john.fullName is "John Appleseed"
+// john.fullName 为 "John Appleseed"
 ```
 
 <!--
@@ -211,18 +165,12 @@ let john = Person(fullName: "John Appleseed")
   ```
 -->
 
-This example defines a structure called `Person`,
-which represents a specific named person.
-It states that it adopts the `FullyNamed` protocol
-as part of the first line of its definition.
+这个例子中定义了一个叫做 `Person` 的结构体，用来表示一个具有名字的人。它在定义的第一行声明了它遵循 `FullyNamed` 协议。
 
-Each instance of `Person` has a single stored property called `fullName`,
-which is of type `String`.
-This matches the single requirement of the `FullyNamed` protocol,
-and means that `Person` has correctly conformed to the protocol.
-(Swift reports an error at compile time if a protocol requirement isn't fulfilled.)
+每个 `Person` 实例都有一个 `String` 类型的存储属性 `fullName`。这正好满足了 `FullyNamed` 协议的要求，也就意味着 `Person` 结构体正确地遵循了协议。
+（如果协议要求未被完全满足，Swift 在编译时会报错。）
 
-Here's a more complex class, which also adopts and conforms to the `FullyNamed` protocol:
+下面是一个更为复杂的类，它遵循并符合了 `FullyNamed` 协议：
 
 ```swift
 class Starship: FullyNamed {
@@ -237,7 +185,7 @@ class Starship: FullyNamed {
     }
 }
 var ncc1701 = Starship(name: "Enterprise", prefix: "USS")
-// ncc1701.fullName is "USS Enterprise"
+// ncc1701.fullName 为 "USS Enterprise"
 ```
 
 <!--
@@ -261,31 +209,17 @@ var ncc1701 = Starship(name: "Enterprise", prefix: "USS")
   ```
 -->
 
-This class implements the `fullName` property requirement as
-a computed read-only property for a starship.
-Each `Starship` class instance stores a mandatory `name` and an optional `prefix`.
-The `fullName` property uses the `prefix` value if it exists,
-and prepends it to the beginning of `name` to create a full name for the starship.
+`Starship` 类把 `fullName` 作为只读的计算属性来实现。每一个 `Starship` 类的实例都有一个名为 `name` 的非可选属性和一个名为 `prefix` 的可选属性。当 `prefix` 存在时，计算属性 `fullName` 会将 `prefix` 插入到 `name` 之前，从而得到一个带有 `prefix` 的 `fullName`。
 
 <!--
   TODO: add some advice on how protocols should be named
 -->
 
-## Method Requirements
+## 方法要求
 
-Protocols can require specific instance methods and type methods
-to be implemented by conforming types.
-These methods are written as part of the protocol's definition
-in exactly the same way as for normal instance and type methods,
-but without curly braces or a method body.
-Variadic parameters are allowed, subject to the same rules as for normal methods.
-Default values, however, can't be specified for method parameters within a protocol's definition.
+协议可以要求遵循协议的类型实现某些指定的实例方法和类方法。这些方法的编写方式与普通实例方法和类型方法完全相同，都写在协议定义的一部分中，但没有大括号或方法主体。协议允许使用可变参数，和普通方法的定义方式相同。但是，不能在协议定义中为方法参数指定默认值。
 
-As with type property requirements,
-you always prefix type method requirements with the `static` keyword
-when they're defined in a protocol.
-This is true even though type method requirements are prefixed with
-the `class` or `static` keyword when implemented by a class:
+正如属性要求中所述，在协议中定义类方法的时候，总是使用 `static` 关键字作为前缀。即使在类中实现时，类方法要求使用 `class` 或 `static` 作为关键字前缀，这条规则仍然适用：
 
 ```swift
 protocol SomeProtocol {
@@ -303,7 +237,7 @@ protocol SomeProtocol {
   ```
 -->
 
-The following example defines a protocol with a single instance method requirement:
+下面的例子定义了一个只含有一个实例方法的协议：
 
 ```swift
 protocol RandomNumberGenerator {
@@ -321,22 +255,11 @@ protocol RandomNumberGenerator {
   ```
 -->
 
-This protocol, `RandomNumberGenerator`, requires any conforming type
-to have an instance method called `random`,
-which returns a `Double` value whenever it's called.
-Although it's not specified as part of the protocol,
-it's assumed that this value will be
-a number from `0.0` up to (but not including) `1.0`.
+`RandomNumberGenerator` 协议要求遵循协议的类型必须拥有一个名为 `random`，返回值类型为 `Double` 的实例方法。尽管这里并未指明，但是我们假设返回值是从 `0.0` 到（但不包括）`1.0`。
 
-The `RandomNumberGenerator` protocol doesn't make any assumptions
-about how each random number will be generated ---
-it simply requires the generator to provide a standard way
-to generate a new random number.
+`RandomNumberGenerator` 协议并没有对如何生成每个随机数做任何假设 —— 它只要求生成器提供一种标准的方式来生成新的随机数。
 
-Here's an implementation of a class that adopts and conforms to
-the `RandomNumberGenerator` protocol.
-This class implements a pseudorandom number generator algorithm known as
-a *linear congruential generator*:
+这里有一个遵循并符合 `RandomNumberGenerator` 协议的类。该类实现了一个叫做 *线性同余生成器（linear congruential generator）* 的伪随机数算法。
 
 ```swift
 class LinearCongruentialGenerator: RandomNumberGenerator {
@@ -352,9 +275,9 @@ class LinearCongruentialGenerator: RandomNumberGenerator {
 }
 let generator = LinearCongruentialGenerator()
 print("Here's a random number: \(generator.random())")
-// Prints "Here's a random number: 0.3746499199817101"
+// 打印 “Here's a random number: 0.37464991998171”
 print("And another one: \(generator.random())")
-// Prints "And another one: 0.729023776863283"
+// 打印 “And another one: 0.729023776863283”
 ```
 
 <!--
@@ -380,37 +303,17 @@ print("And another one: \(generator.random())")
   ```
 -->
 
-## Mutating Method Requirements
+## 变值方法要求
 
-It's sometimes necessary for a method to modify (or *mutate*) the instance it belongs to.
-For instance methods on value types (that is, structures and enumerations)
-you place the `mutating` keyword before a method's `func` keyword
-to indicate that the method is allowed to modify the instance it belongs to
-and any properties of that instance.
-This process is described in <doc:Methods#Modifying-Value-Types-from-Within-Instance-Methods>.
+有时需要在方法中改变（或*变值（mutate）*）方法所属的实例。例如，在值类型（即结构体和枚举）的实例方法中，将 `mutating` 关键字作为方法的前缀，写在 `func` 关键字之前，表示可以在该方法中修改它所属的实例以及实例的任意属性的值。这一过程在 <doc:Methods#Modifying-Value-Types-from-Within-Instance-Methods> 章节中有详细描述。
 
-If you define a protocol instance method requirement
-that's intended to mutate instances of any type that adopts the protocol,
-mark the method with the `mutating` keyword
-as part of the protocol's definition.
-This enables structures and enumerations to adopt the protocol
-and satisfy that method requirement.
+如果你在协议中定义了一个实例方法，该方法会改变遵循该协议的类型的实例，那么在定义协议时需要在方法前加 `mutating` 关键字。这使得结构体和枚举能够遵循此协议并满足此方法要求。
 
-> Note: If you mark a protocol instance method requirement as `mutating`,
-> you don't need to write the `mutating` keyword when writing
-> an implementation of that method for a class.
-> The `mutating` keyword is only used by structures and enumerations.
+> 注意: 实现协议中的 `mutating` 方法时，若是类类型，则不用写 `mutating` 关键字。`mutating` 关键字只用于结构体和枚举。
 
-The example below defines a protocol called `Togglable`,
-which defines a single instance method requirement called `toggle`.
-As its name suggests, the `toggle()` method is intended to
-toggle or invert the state of any conforming type,
-typically by modifying a property of that type.
+如下所示，`Togglable` 协议只定义了一个名为 `toggle` 的实例方法。顾名思义，`toggle()` 方法将改变实例属性，从而切换遵循该协议类型的实例的状态。
 
-The `toggle()` method is marked with the `mutating` keyword
-as part of the `Togglable` protocol definition,
-to indicate that the method is expected to mutate the state of a conforming instance
-when it's called:
+`toggle()` 方法在定义的时候，使用 `mutating` 关键字标记，这表明当它被调用时，该方法将会改变遵循协议的类型的实例：
 
 ```swift
 protocol Togglable {
@@ -428,16 +331,9 @@ protocol Togglable {
   ```
 -->
 
-If you implement the `Togglable` protocol for a structure or enumeration,
-that structure or enumeration can conform to the protocol
-by providing an implementation of the `toggle()` method
-that's also marked as `mutating`.
+当使用枚举或结构体来实现 `Togglable` 协议时，需要提供一个被标记为 `mutating` 的 `toggle()` 方法。
 
-The example below defines an enumeration called `OnOffSwitch`.
-This enumeration toggles between two states,
-indicated by the enumeration cases `on` and `off`.
-The enumeration's `toggle` implementation is marked as `mutating`,
-to match the `Togglable` protocol's requirements:
+下面定义了一个名为 `OnOffSwitch` 的枚举。这个枚举在两种状态之间进行切换，用枚举成员 `On` 和 `Off` 表示。枚举的 `toggle()` 方法被标记为 `mutating`，以满足 `Togglable` 协议的要求：
 
 ```swift
 enum OnOffSwitch: Togglable {
@@ -453,7 +349,7 @@ enum OnOffSwitch: Togglable {
 }
 var lightSwitch = OnOffSwitch.off
 lightSwitch.toggle()
-// lightSwitch is now equal to .on
+// lightSwitch 现在的值为 .on
 ```
 
 <!--
@@ -477,13 +373,9 @@ lightSwitch.toggle()
   ```
 -->
 
-## Initializer Requirements
+## 构造器要求
 
-Protocols can require specific initializers
-to be implemented by conforming types.
-You write these initializers as part of the protocol's definition
-in exactly the same way as for normal initializers,
-but without curly braces or an initializer body:
+协议可以要求遵循协议的类型实现指定的构造器。你可以像编写普通构造器那样，在协议的定义里写下构造器的声明，但不需要写花括号和构造器的实体：
 
 ```swift
 protocol SomeProtocol {
@@ -501,17 +393,14 @@ protocol SomeProtocol {
   ```
 -->
 
-### Class Implementations of Protocol Initializer Requirements
+### 协议构造器要求的类实现
 
-You can implement a protocol initializer requirement on a conforming class
-as either a designated initializer or a convenience initializer.
-In both cases,
-you must mark the initializer implementation with the `required` modifier:
+你可以在遵循协议的类中实现构造器，无论是作为指定构造器，还是作为便利构造器。无论哪种情况，你都必须为构造器实现标上 `required` 修饰符：
 
 ```swift
 class SomeClass: SomeProtocol {
     required init(someParameter: Int) {
-        // initializer implementation goes here
+        // 这里是构造器的实现部分
     }
 }
 ```
@@ -547,13 +436,9 @@ class SomeClass: SomeProtocol {
   ```
 -->
 
-The use of the `required` modifier ensures that
-you provide an explicit or inherited implementation of the initializer requirement
-on all subclasses of the conforming class,
-such that they also conform to the protocol.
+使用 `required` 修饰符可以确保所有子类也必须提供此构造器实现，从而也能遵循协议。
 
-For more information on required initializers,
-see <doc:Initialization#Required-Initializers>.
+关于 `required` 构造器的更多内容，参考 <doc:Initialization#Required-Initializers>。
 
 <!--
   - test: `protocolInitializerRequirementsRequireTheRequiredModifierOnTheImplementingClass`
@@ -601,10 +486,7 @@ see <doc:Initialization#Required-Initializers>.
   ```
 -->
 
-> Note: You don't need to mark protocol initializer implementations with the `required` modifier
-> on classes that are marked with the `final` modifier,
-> because final classes can't subclassed.
-> For more about the `final` modifier, see <doc:Inheritance#Preventing-Overrides>.
+> 注意: 如果类已经被标记为 `final`，那么不需要在协议构造器的实现中使用 `required` 修饰符，因为 `final` 类不能有子类。关于 `final` 修饰符的更多内容，参见 <doc:Inheritance#Preventing-Overrides>。
 
 <!--
   - test: `finalClassesDoNotNeedTheRequiredModifierForProtocolInitializerRequirements`
@@ -622,9 +504,7 @@ see <doc:Initialization#Required-Initializers>.
   ```
 -->
 
-If a subclass overrides a designated initializer from a superclass,
-and also implements a matching initializer requirement from a protocol,
-mark the initializer implementation with both the `required` and `override` modifiers:
+如果一个子类重写了父类的指定构造器，并且该构造器满足了某个协议的要求，那么该构造器的实现需要同时标注 `required` 和 `override` 修饰符：
 
 ```swift
 protocol SomeProtocol {
@@ -633,14 +513,14 @@ protocol SomeProtocol {
 
 class SomeSuperClass {
     init() {
-        // initializer implementation goes here
+        // 这里是构造器的实现部分
     }
 }
 
 class SomeSubClass: SomeSuperClass, SomeProtocol {
-    // "required" from SomeProtocol conformance; "override" from SomeSuperClass
+    // 因为遵循协议，需要加上 required；因为继承自父类，需要加上 override
     required override init() {
-        // initializer implementation goes here
+        // 这里是构造器的实现部分
     }
 }
 ```
@@ -668,15 +548,11 @@ class SomeSubClass: SomeSuperClass, SomeProtocol {
   ```
 -->
 
-### Failable Initializer Requirements
+### 可失败构造器要求
 
-Protocols can define failable initializer requirements for conforming types,
-as defined in <doc:Initialization#Failable-Initializers>.
+协议还可以为遵循协议的类型定义可失败构造器要求，详见 <doc:Initialization#Failable-Initializers>。
 
-A failable initializer requirement can be satisfied by
-a failable or nonfailable initializer on a conforming type.
-A nonfailable initializer requirement can be satisfied by
-a nonfailable initializer or an implicitly unwrapped failable initializer.
+遵循协议的类型可以通过可失败构造器（`init?`）或非可失败构造器（`init`）来满足协议中定义的可失败构造器要求。协议中定义的非可失败构造器要求可以通过非可失败构造器（`init`）或隐式解包可失败构造器（`init!`）来满足。
 
 <!--
   - test: `failableRequirementCanBeSatisfiedByFailableInitializer`
@@ -758,49 +634,17 @@ a nonfailable initializer or an implicitly unwrapped failable initializer.
   ```
 -->
 
-## Protocols as Types
+## 协议作为类型
 
-Protocols don't actually implement any functionality themselves.
-Regardless, you can use a protocol as a type in your code.
+协议本身并不实现任何功能。尽管如此，你仍然可以在代码中将协议用作类型。
 
-The most common way to use a protocol as a type
-is to use a protocol as a generic constraint.
-Code with generic constraints can work with
-any type that conforms to the protocol,
-and the specific type is chosen by the code that uses the API.
-For example,
-when you call a function that takes an argument
-and that argument's type is generic,
-the caller chooses the type.
+最常见的将协议用作类型的方式是将其用作泛型约束。具有泛型约束的代码可以与任何符合该协议的类型一起工作，具体的类型由使用该 API 的代码选择。例如，当你调用一个函数并传入一个参数，而该参数的类型是泛型时，调用者会选择具体的类型。
 
-Code with an opaque type
-works with some type that conforms to the protocol.
-The underlying type is known at compile time,
-and the API implementation chooses that type,
-but that type's identity is hidden from clients of the API.
-Using an opaque type lets you prevent implementation details of an API
-from leaking through the layer of abstraction ---
-for example, by hiding the specific return type from a function,
-and only guaranteeing that the value conforms to a given protocol.
+在代码中使用不透明类型时，可以与某个符合该协议的类型一起工作。底层类型在编译时是已知的，API 实现会选择该类型，但该类型的身份对 API 的使用方是隐藏的。使用不透明类型可以防止 API 的实现细节泄露到抽象层之外 —— 例如，通过隐藏函数的具体返回类型，并仅保证该值符合给定的协议。
 
-Code with a boxed protocol type
-works with any type, chosen at runtime, that conforms to the protocol.
-To support this runtime flexibility,
-Swift adds a level of indirection when necessary ---
-known as a *box*,
-which has a performance cost.
-Because of this flexibility,
-Swift doesn't know the underlying type at compile time,
-which means you can access only the members
-that are required by the protocol.
-Accessing any other APIs on the underlying type
-requires casting at runtime.
+代码使用装箱（boxed）的协议类型时，可以与任何在运行时选择的、符合该协议的类型一起工作。为了支持这种运行时的灵活性，Swift 在必要时会添加一个间接层 —— 称为*箱子（box）*，这会带来性能开销。由于这种灵活性，Swift 在编译时无法知道底层类型，这意味着你只能访问协议所要求的成员。要访问底层类型的任何其他 API，都需要在运行时进行强制转换。
 
-For information about using protocols as generic constraints,
-see <doc:Generics>.
-For information about opaque types, and boxed protocol types,
-see <doc:OpaqueTypes>.
-
+关于使用协议作为泛型约束的信息，参考 <doc:Generics>。关于不透明类型和装箱协议类型的信息，参考 <doc:OpaqueTypes>。
 <!--
 Performance impact from SE-0335:
 
@@ -814,22 +658,12 @@ code using existential types incurs pointer indirection and dynamic method dispa
 that cannot be optimized away.
 -->
 
-## Delegation
+## 代理
 
-*Delegation* is a design pattern that enables
-a class or structure to hand off (or *delegate*)
-some of its responsibilities to an instance of another type.
-This design pattern is implemented by defining
-a protocol that encapsulates the delegated responsibilities,
-such that a conforming type (known as a delegate)
-is guaranteed to provide the functionality that has been delegated.
-Delegation can be used to respond to a particular action,
-or to retrieve data from an external source without needing to know
-the underlying type of that source.
+*代理（Delegate）*是一种设计模式，它允许类或结构体将一些需要它们负责的功能代理给其他类型的实例。代理模式的实现很简单：定义协议来封装那些需要被代理的功能，这样就能确保遵循协议的类型能提供这些功能。代理模式可以用来响应特定的动作，或者接收外部数据源提供的数据，而无需关心外部数据源的类型。
 
-The example below defines a dice game
-and a nested protocol for a delegate
-that tracks the game's progress:
+下面的例子定义了两个基于骰子游戏的协议：
+以下示例定义了一个骰子游戏，以及一个用于跟踪游戏进度的嵌套协议：
 
 ```swift
 class DiceGame {
@@ -869,51 +703,17 @@ class DiceGame {
 }
 ```
 
-The `DiceGame` class implements a game where
-each player takes a turn rolling dice,
-and the player who rolls the highest number wins the round.
-It uses a linear congruential generator
-from the example earlier in the chapter,
-to generate random numbers for dice rolls.
+`DiceGame` 类实现了一个游戏，每个玩家轮流掷骰子，掷出最高点数的玩家赢得该轮。它使用前文中示例中的线性同余生成器来生成骰子掷出的随机数。
 
-The `DiceGame.Delegate` protocol can be adopted
-to track the progress of a dice game.
-Because the `DiceGame.Delegate` protocol
-is always used in the context of a dice game,
-it's nested inside of the `DiceGame` class.
-Protocols can be nested
-inside of type declarations like structures and classes,
-as long as the outer declaration isn't generic.
-For information about nesting types, see <doc:NestedTypes>.
+`DiceGame.Delegate` 协议可用于跟踪骰子游戏的进度。由于 `DiceGame.Delegate` 协议总是在骰子游戏的上下文中使用，因此它被嵌套在 `DiceGame` 类内部。协议可以嵌套在类型声明（如结构体和类）内部，只要外部声明不是泛型。关于嵌套类型的更多信息，参见 <doc:NestedTypes>。
 
-To prevent strong reference cycles,
-delegates are declared as weak references.
-For information about weak references,
-see <doc:AutomaticReferenceCounting#Strong-Reference-Cycles-Between-Class-Instances>.
-Marking the protocol as class-only
-lets the `DiceGame` class
-declare that its delegate must use a weak reference.
-A class-only protocol
-is marked by its inheritance from `AnyObject`,
-as discussed in <doc:Protocols#Class-Only-Protocols>.
+为了防止强引用循环，代理被声明为弱引用。关于弱引用的更多信息，参见 <doc:AutomaticReferenceCounting#Strong-Reference-Cycles-Between-Class-Instances>。将协议标记为 class-only 允许 `DiceGame` 类声明其代理必须使用弱引用。一个 class-only 协议通过继承自 `AnyObject` 来标记，如 <doc:Protocols#Class-Only-Protocols> 中所述。
 
-`DiceGame.Delegate` provides three methods for tracking the progress of a game.
-These three methods are incorporated into the game logic
-in the `play(rounds:)` method above.
-The `DiceGame` class calls its delegate methods when
-a new game starts, a new turn begins, or the game ends.
+`DiceGame.Delegate` 提供了三个方法来跟踪游戏的进度。这三个方法被整合到上面的 `play(rounds:)` 方法的游戏逻辑中。当新游戏开始、新回合开始或游戏结束时，`DiceGame` 类会调用它的代理方法。
 
-Because the `delegate` property is an *optional* `DiceGame.Delegate`,
-the `play(rounds:)` method uses optional chaining each time it calls a method on the delegate,
-as discussed in <doc:OptionalChaining>.
-If the `delegate` property is nil,
-these delegate calls are ignored.
-If the `delegate` property is non-nil,
-the delegate methods are called,
-and are passed the `DiceGame` instance as a parameter.
+因为 `delegate` 属性是 *可选的* `DiceGame.Delegate`，所以 `play(rounds:)` 方法在每次调用代理方法时都使用可选链，如 <doc:OptionalChaining> 中所述。如果 `delegate` 属性为 nil，这些代理调用将被忽略。如果 `delegate` 属性不为 nil，则会调用代理方法，并将 `DiceGame` 实例作为参数传递。
 
-This next example shows a class called `DiceGameTracker`,
-which adopts the `DiceGame.Delegate` protocol:
+下一个示例展示了一个名为 `DiceGameTracker` 的类，它遵循了 `DiceGame.Delegate` 协议：
 
 ```swift
 class DiceGameTracker: DiceGame.Delegate {
@@ -947,41 +747,29 @@ class DiceGameTracker: DiceGame.Delegate {
 }
 ```
 
-The `DiceGameTracker` class implements all three methods
-that are required by the `DiceGame.Delegate` protocol.
-It uses these methods to zero out both players' scores
-at the start of a new game,
-to update their scores at the end of each round,
-and to announce a winner at the end of the game.
+`DiceGameTracker` 类实现了 `DiceGame.Delegate` 协议要求的所有三个方法。它通过这些方法在新游戏开始时将两个玩家的分数清零，在每轮结束时更新他们的分数，以及在游戏结束时宣布获胜者。
 
-Here's how `DiceGame` and `DiceGameTracker` look in action:
+以下是 `DiceGame` 和 `DiceGameTracker` 的实际运行情况:
 
 ```swift
 let tracker = DiceGameTracker()
 let game = DiceGame(sides: 6)
 game.delegate = tracker
 game.play(rounds: 3)
-// Started a new game
+// 开始新游戏
 // Player 2 won round 1
 // Player 2 won round 2
 // Player 1 won round 3
 // Player 2 won!
 ```
 
-## Adding Protocol Conformance with an Extension
+## 在扩展里添加协议遵循
 
-You can extend an existing type to adopt and conform to a new protocol,
-even if you don't have access to the source code for the existing type.
-Extensions can add new properties, methods, and subscripts to an existing type,
-and are therefore able to add any requirements that a protocol may demand.
-For more about extensions, see <doc:Extensions>.
+即便无法修改源代码，你依然可以通过扩展令已有类型遵循并符合协议。扩展可以为已有类型添加属性、方法、下标以及构造器，因此可以符合协议中可能需要的任意要求。关于扩展的更多详情，参见 <doc:Extensions>。
 
-> Note: Existing instances of a type automatically adopt and conform to a protocol
-> when that conformance is added to the instance's type in an extension.
+> 注意: 当一个协议的遵循被添加到实例类型的扩展中时，现有的实例会自动遵循并符合该协议。
 
-For example, this protocol, called `TextRepresentable`, can be implemented by
-any type that has a way to be represented as text.
-This might be a description of itself, or a text version of its current state:
+例如下面这个 `TextRepresentable` 协议，任何想要通过文本表示一些内容的类型都可以实现该协议。这些想要表示的内容可以是实例本身的描述，也可以是实例当前状态的文本描述：
 
 ```swift
 protocol TextRepresentable {
@@ -999,7 +787,7 @@ protocol TextRepresentable {
   ```
 -->
 
-The `Dice` class from above can be extended to adopt and conform to `TextRepresentable`:
+上面提到的 `Dice` 类可以被扩展以遵循并符合 `TextRepresentable` 协议：
 
 <!--
   No "from above" xref because
@@ -1027,18 +815,14 @@ extension Dice: TextRepresentable {
   ```
 -->
 
-This extension adopts the new protocol in exactly the same way
-as if `Dice` had provided it in its original implementation.
-The protocol name is provided after the type name, separated by a colon,
-and an implementation of all requirements of the protocol
-is provided within the extension's curly braces.
+通过扩展遵循并适配协议，和在原始定义中遵循并符合协议的效果完全相同。协议名称写在类型名之后，以冒号隔开，然后在扩展的大括号内实现协议要求的内容。
 
-Any `Dice` instance can now be treated as `TextRepresentable`:
+现在所有 `Dice` 的实例都可以被看做 `TextRepresentable` 类型：
 
 ```swift
 let d12 = Dice(sides: 12, generator: LinearCongruentialGenerator())
 print(d12.textualDescription)
-// Prints "A 12-sided dice"
+// 打印 “A 12-sided dice”
 ```
 
 <!--
@@ -1051,8 +835,7 @@ print(d12.textualDescription)
   ```
 -->
 
-Similarly, the `SnakesAndLadders` game class can be extended to
-adopt and conform to the `TextRepresentable` protocol:
+同样，`SnakesAndLadders` 类也可以通过扩展来适配和遵循 `TextRepresentable` 协议：
 
 ```swift
 extension SnakesAndLadders: TextRepresentable {
@@ -1061,7 +844,7 @@ extension SnakesAndLadders: TextRepresentable {
     }
 }
 print(game.textualDescription)
-// Prints "A game of Snakes and Ladders with 25 squares"
+// 打印 “A game of Snakes and Ladders with 25 squares”
 ```
 
 <!--
@@ -1078,20 +861,11 @@ print(game.textualDescription)
   ```
 -->
 
-### Conditionally Conforming to a Protocol
+### 有条件地遵循协议
 
-A generic type may be able to satisfy the requirements of a protocol
-only under certain conditions,
-such as when the type's generic parameter conforms to the protocol.
-You can make a generic type conditionally conform to a protocol
-by listing constraints when extending the type.
-Write these constraints after the name of the protocol you're adopting
-by writing a generic `where` clause.
-For more about generic `where` clauses, see <doc:Generics#Generic-Where-Clauses>.
+泛型类型可能只在某些情况下满足一个协议的要求，比如当类型的泛型形式参数遵循对应协议时。你可以通过在扩展类型时列出限制让泛型类型有条件地遵循某协议。在你采纳协议的名字后面写泛型 `where` 分句。更多关于泛型 `where` 分句，参见 <doc:Generics#Generic-Where-Clauses>。
 
-The following extension
-makes `Array` instances conform to the `TextRepresentable` protocol
-whenever they store elements of a type that conforms to `TextRepresentable`.
+下面的扩展让 `Array` 类型只要在存储遵循 `TextRepresentable` 协议的元素时，就遵循 `TextRepresentable` 协议。
 
 ```swift
 extension Array: TextRepresentable where Element: TextRepresentable {
@@ -1102,7 +876,7 @@ extension Array: TextRepresentable where Element: TextRepresentable {
 }
 let myDice = [d6, d12]
 print(myDice.textualDescription)
-// Prints "[A 6-sided dice, A 12-sided dice]"
+// 打印 "[A 6-sided dice, A 12-sided dice]"
 ```
 
 <!--
@@ -1121,11 +895,9 @@ print(myDice.textualDescription)
   ```
 -->
 
-### Declaring Protocol Adoption with an Extension
+### 在扩展里声明协议遵循
 
-If a type already conforms to all of the requirements of a protocol,
-but hasn't yet stated that it adopts that protocol,
-you can make it adopt the protocol with an empty extension:
+当一个类型已经遵循了某个协议中的所有要求，却还没有声明遵循该协议时，可以通过空的扩展来让它遵循该协议：
 
 ```swift
 struct Hamster {
@@ -1151,13 +923,13 @@ extension Hamster: TextRepresentable {}
   ```
 -->
 
-Instances of `Hamster` can now be used wherever `TextRepresentable` is the required type:
+从现在起，`Hamster` 的实例可以作为 `TextRepresentable` 类型使用：
 
 ```swift
 let simonTheHamster = Hamster(name: "Simon")
 let somethingTextRepresentable: TextRepresentable = simonTheHamster
 print(somethingTextRepresentable.textualDescription)
-// Prints "A hamster named Simon"
+// 打印 “A hamster named Simon”
 ```
 
 <!--
@@ -1171,17 +943,11 @@ print(somethingTextRepresentable.textualDescription)
   ```
 -->
 
-> Note: Types don't automatically adopt a protocol just by satisfying its requirements.
-> They must always explicitly declare their adoption of the protocol.
+> 注意: 即使满足了协议的所有要求，类型也不会自动遵循协议，必须显式地遵循协议。
 
-## Adopting a Protocol Using a Synthesized Implementation
+## 使用合成实现来遵循协议
 
-Swift can automatically provide the protocol conformance
-for `Equatable`, `Hashable`, and `Comparable`
-in many simple cases.
-Using this synthesized implementation
-means you don't have to write repetitive boilerplate code
-to implement the protocol requirements yourself.
+Swift 可以在很多简单场景下自动提供遵循 `Equatable`、`Hashable` 和 `Comparable` 协议的实现。在使用这些合成实现之后，无需再编写重复的样板代码来实现这些协议所要求的方法。
 
 <!--
   Linking directly to a section of an article like the URLs below do
@@ -1206,25 +972,15 @@ to implement the protocol requirements yourself.
   https://developer.apple.com/documentation/swift/adopting_common_protocols#2991123
 -->
 
-Swift provides a synthesized implementation of `Equatable`
-for the following kinds of custom types:
+Swift 为以下几种自定义类型提供了 `Equatable` 协议的合成实现：
 
-- Structures that have only stored properties that conform to the `Equatable` protocol
-- Enumerations that have only associated types that conform to the `Equatable` protocol
-- Enumerations that have no associated types
+- 只包含遵循 `Equatable` 协议的存储属性的结构体
+- 只包含遵循 `Equatable` 协议的关联类型的枚举
+- 没有任何关联类型的枚举
 
-To receive a synthesized implementation of `==`,
-declare conformance to `Equatable`
-in the file that contains the original declaration,
-without implementing an `==` operator yourself.
-The `Equatable` protocol provides a default implementation of `!=`.
+在包含类型原始声明的文件中声明对 `Equatable` 协议的遵循，可以得到 `==` 操作符的合成实现，且无需自己编写任何关于 `==` 的实现代码。`Equatable` 协议同时包含 `!=` 操作符的默认实现。
 
-The example below defines a `Vector3D` structure
-for a three-dimensional position vector `(x, y, z)`,
-similar to the `Vector2D` structure.
-Because the `x`, `y`, and `z` properties are all of an `Equatable` type,
-`Vector3D` receives synthesized implementations
-of the equivalence operators.
+下面的例子中定义了一个 `Vector3D` 结构体来表示一个类似 `Vector2D` 的三维向量 `(x, y, z)`。由于 `x`、`y` 和 `z` 都是满足 `Equatable` 的类型，`Vector3D` 可以得到等价运算符的合成实现。
 
 ```swift
 struct Vector3D: Equatable {
@@ -1236,7 +992,7 @@ let anotherTwoThreeFour = Vector3D(x: 2.0, y: 3.0, z: 4.0)
 if twoThreeFour == anotherTwoThreeFour {
     print("These two vectors are also equivalent.")
 }
-// Prints "These two vectors are also equivalent."
+// 打印 "These two vectors are also equivalent."
 ```
 
 <!--
@@ -1265,32 +1021,17 @@ if twoThreeFour == anotherTwoThreeFour {
   even if you don't declare the protocol conformance.
 -->
 
-Swift provides a synthesized implementation of `Hashable`
-for the following kinds of custom types:
+Swift 为以下几种自定义类型提供了 `Hashable` 协议的合成实现：
 
-- Structures that have only stored properties that conform to the `Hashable` protocol
-- Enumerations that have only associated types that conform to the `Hashable` protocol
-- Enumerations that have no associated types
+- 只包含遵循 `Hashable` 协议的存储属性的结构体
+- 只包含遵循 `Hashable` 协议的关联类型的枚举
+- 没有任何关联类型的枚举
 
-To receive a synthesized implementation of `hash(into:)`,
-declare conformance to `Hashable`
-in the file that contains the original declaration,
-without implementing a `hash(into:)` method yourself.
+在包含类型原始声明的文件中声明对 `Hashable` 协议的遵循，可以得到 `hash(into:)` 的合成实现，且无需自己编写任何关于 `hash(into:)` 的实现代码。
 
-Swift provides a synthesized implementation of `Comparable`
-for enumerations that don't have a raw value.
-If the enumeration has associated types,
-they must all conform to the `Comparable` protocol.
-To receive a synthesized implementation of `<`,
-declare conformance to `Comparable`
-in the file that contains the original enumeration declaration,
-without implementing a `<` operator yourself.
-The `Comparable` protocol's default implementation
-of `<=`, `>`, and `>=` provides the remaining comparison operators.
+Swift 为没有原始值的枚举类型提供了 `Comparable` 协议的合成实现。如果枚举类型包含关联类型，那这些关联类型也必须同时遵循 `Comparable` 协议。在包含原始枚举类型声明的文件中声明其对 `Comparable` 协议的遵循，可以得到 `<` 操作符的合成实现，且无需自己编写任何关于 `<` 的实现代码。`Comparable` 协议同时包含 `<=`、`>` 和 `>=` 操作符的默认实现。
 
-The example below defines a `SkillLevel` enumeration
-with cases for beginners, intermediates, and experts.
-Experts are additionally ranked by the number of stars they have.
+下面的例子中定义了 `SkillLevel` 枚举类型，其中定义了 beginner（初学者）、intermediate（中级）和 expert（专家）三种类型，专家类型会由额外的 stars（星级）数量来进行排名。
 
 ```swift
 enum SkillLevel: Comparable {
@@ -1303,10 +1044,10 @@ var levels = [SkillLevel.intermediate, SkillLevel.beginner,
 for level in levels.sorted() {
     print(level)
 }
-// Prints "beginner"
-// Prints "intermediate"
-// Prints "expert(stars: 3)"
-// Prints "expert(stars: 5)"
+// 打印 “beginner”
+// 打印 “intermediate”
+// 打印 “expert(stars: 3)”
+// 打印 “expert(stars: 5)”
 ```
 
 <!--
@@ -1374,12 +1115,9 @@ for level in levels.sorted() {
   ```
 -->
 
-## Collections of Protocol Types
+## 协议类型的集合
 
-A protocol can be used as the type to be stored in
-a collection such as an array or a dictionary,
-as mentioned in <doc:Protocols#Protocols-as-Types>.
-This example creates an array of `TextRepresentable` things:
+协议类型可以在数组或者字典这样的集合中使用，在 <doc:Protocols#Protocols-as-Types> 提到了这样的用法。下面的例子创建了一个元素类型为 `TextRepresentable` 的数组：
 
 ```swift
 let things: [TextRepresentable] = [game, d12, simonTheHamster]
@@ -1393,8 +1131,7 @@ let things: [TextRepresentable] = [game, d12, simonTheHamster]
   ```
 -->
 
-It's now possible to iterate over the items in the array,
-and print each item's textual description:
+现在可以遍历 `things` 数组，并打印每个元素的文本表示：
 
 ```swift
 for thing in things {
@@ -1418,23 +1155,15 @@ for thing in things {
   ```
 -->
 
-Note that the `thing` constant is of type `TextRepresentable`.
-It's not of type `Dice`, or `DiceGame`, or `Hamster`,
-even if the actual instance behind the scenes is of one of those types.
-Nonetheless, because it's of type `TextRepresentable`,
-and anything that's `TextRepresentable` is known to have a `textualDescription` property,
-it's safe to access `thing.textualDescription` each time through the loop.
+注意 `thing` 常量是 `TextRepresentable` 类型而不是 `Dice`，`DiceGame`，`Hamster` 等类型，即使实例在幕后确实是这些类型中的一种。由于 `thing` 是 `TextRepresentable` 类型，任何 `TextRepresentable` 的实例都有一个 `textualDescription` 属性，所以在每次循环中可以安全地访问 `thing.textualDescription`。
 
-## Protocol Inheritance
+## 协议的继承
 
-A protocol can *inherit* one or more other protocols
-and can add further requirements on top of the requirements it inherits.
-The syntax for protocol inheritance is similar to the syntax for class inheritance,
-but with the option to list multiple inherited protocols, separated by commas:
+协议能够*继承（inherit）*一个或多个其他协议，可以在继承的协议的基础上增加新的要求。协议的继承语法与类的继承相似，多个被继承的协议间用逗号分隔：
 
 ```swift
 protocol InheritingProtocol: SomeProtocol, AnotherProtocol {
-    // protocol definition goes here
+    // 这里是协议的定义部分
 }
 ```
 
@@ -1450,8 +1179,7 @@ protocol InheritingProtocol: SomeProtocol, AnotherProtocol {
   ```
 -->
 
-Here's an example of a protocol that inherits
-the `TextRepresentable` protocol from above:
+如下所示，`PrettyTextRepresentable` 协议继承了上面提到的 `TextRepresentable` 协议：
 
 ```swift
 protocol PrettyTextRepresentable: TextRepresentable {
@@ -1469,15 +1197,9 @@ protocol PrettyTextRepresentable: TextRepresentable {
   ```
 -->
 
-This example defines a new protocol, `PrettyTextRepresentable`,
-which inherits from `TextRepresentable`.
-Anything that adopts `PrettyTextRepresentable` must satisfy all of the requirements
-enforced by `TextRepresentable`,
-*plus* the additional requirements enforced by `PrettyTextRepresentable`.
-In this example, `PrettyTextRepresentable` adds a single requirement
-to provide a gettable property called `prettyTextualDescription` that returns a `String`.
+例子中定义了一个新的协议 `PrettyTextRepresentable`，它继承自 `TextRepresentable` 协议。任何遵循 `PrettyTextRepresentable` 协议的类型，除了必须满足 `TextRepresentable` 协议的要求，*还要*额外满足 `PrettyTextRepresentable` 协议的要求。在这个例子中，`PrettyTextRepresentable` 协议额外要求遵循协议的类型提供一个返回值为 `String` 类型的 `prettyTextualDescription` 属性。
 
-The `SnakesAndLadders` class can be extended to adopt and conform to `PrettyTextRepresentable`:
+如下所示，扩展 `SnakesAndLadders`，使其遵循并符合 `PrettyTextRepresentable` 协议：
 
 ```swift
 extension SnakesAndLadders: PrettyTextRepresentable {
@@ -1521,31 +1243,17 @@ extension SnakesAndLadders: PrettyTextRepresentable {
   ```
 -->
 
-This extension states that it adopts the `PrettyTextRepresentable` protocol
-and provides an implementation of the `prettyTextualDescription` property
-for the `SnakesAndLadders` type.
-Anything that's `PrettyTextRepresentable` must also be `TextRepresentable`,
-and so the implementation of `prettyTextualDescription` starts
-by accessing the `textualDescription` property
-from the `TextRepresentable` protocol to begin an output string.
-It appends a colon and a line break,
-and uses this as the start of its pretty text representation.
-It then iterates through the array of board squares,
-and appends a geometric shape to represent the contents of each square:
+上述扩展令 `SnakesAndLadders` 遵循了 `PrettyTextRepresentable` 协议，并提供了协议要求的 `prettyTextualDescription` 属性。每个 `PrettyTextRepresentable` 类型同时也是 `TextRepresentable` 类型，所以在 `prettyTextualDescription` 的实现中，可以访问 `textualDescription` 属性，然后拼接上冒号和换行符，接着遍历数组中的元素，拼接一个几何图形来表示每个棋盘方格的内容：
 
-- If the square's value is greater than `0`, it's the base of a ladder,
-  and is represented by `▲`.
-- If the square's value is less than `0`, it's the head of a snake,
-  and is represented by `▼`.
-- Otherwise, the square's value is `0`, and it's a “free” square,
-  represented by `○`.
+- 当从数组中取出的元素的值大于 `0` 时，用 `▲` 表示。
+- 当从数组中取出的元素的值小于 `0` 时，用 `▼` 表示。
+- 当从数组中取出的元素的值等于 `0` 时，用 `○` 表示。
 
-The `prettyTextualDescription` property can now be used to print a pretty text description
-of any `SnakesAndLadders` instance:
+任意 `SankesAndLadders` 的实例都可以使用 `prettyTextualDescription` 属性来打印一个漂亮的文本描述：
 
 ```swift
 print(game.prettyTextualDescription)
-// A game of Snakes and Ladders with 25 squares:
+// 一个有 25 个方格的蛇梯棋（Snakes and Ladders）游戏:
 // ○ ○ ▲ ○ ○ ▲ ○ ○ ▲ ▲ ○ ○ ○ ▼ ○ ○ ○ ○ ▼ ○ ○ ▼ ○ ▼ ○
 ```
 
